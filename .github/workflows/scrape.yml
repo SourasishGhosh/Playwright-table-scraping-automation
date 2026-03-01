@@ -1,0 +1,77 @@
+name: Scrape Table Sums
+
+on:
+  workflow_dispatch:   # lets you trigger it manually with a button
+  push:
+    branches: [main]  # also runs when you push code
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest  # GitHub gives us a fresh Linux computer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright and its browser
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install chromium
+          npx playwright install-deps chromium
+
+      - name: Run scraper - 23f3004075@ds.study.iitm.ac.in
+        run: node scrape.js
+```
+
+> 🔑 **Important:** Notice the last step's `name` contains your email address. This is required so the grader can find it in the logs!
+
+Click **Commit new file**.
+
+---
+
+## Step 4: Run the GitHub Action
+
+1. In your repo, click the **"Actions"** tab
+2. You'll see **"Scrape Table Sums"** in the left sidebar
+3. Click it, then click **"Run workflow"** → **"Run workflow"** (green button)
+4. Wait ~2 minutes for it to finish
+5. Click the completed run → click the **"scrape"** job → expand the **"Run scraper"** step to see your output!
+
+You should see something like:
+```
+Seed 67: 12453.23
+Seed 68: 9821.45
+...
+Total sum across all pages: 112345.67
+```
+
+---
+
+## Step 5: Get Your GitHub Personal Access Token
+
+The assignment wants your repo URL + a token so it can read your Action logs.
+
+1. Go to [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Click **"Generate new token (classic)"**
+3. Give it a name like `tds-grader`
+4. Set expiration to **30 days**
+5. Check these scopes:
+   - ✅ `repo` (full repo access)
+   - ✅ `workflow`
+   - ✅ `read:org` (under admin:org)
+6. Scroll down → click **"Generate token"**
+7. **Copy it immediately** — you can't see it again!
+
+---
+
+## Step 6: Submit Your Answer
+
+Your answer will look like:
+```
+https://github.com/YOUR_USERNAME/playwright-scraper ghp_xxxxxxxxxxxxxxxxxxxx
